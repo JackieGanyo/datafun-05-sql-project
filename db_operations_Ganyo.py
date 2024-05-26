@@ -15,4 +15,5 @@ import sys
 #Import External Libraries
 import sqlite3
 import pandas as pd
+import pyarrow as pa
 import datetime
