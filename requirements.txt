@@ -1,15 +1,3 @@
-# SQLAlchemy for database abstraction
-SQLAlchemy==1.4.23
-
-# psycopg2 for PostgreSQL database connectivity
-psycopg2==2.9.1
-
-# pyodbc for ODBC database connectivity
-pyodbc==4.0.32
-
-# mysql-connector-python for MySQL database connectivity
-mysql-connector-python==8.0.27
-
 # sqlite3 for SQLite database connectivity
 pysqlite3==0.4.6
 
