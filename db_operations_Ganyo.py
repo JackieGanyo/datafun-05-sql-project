@@ -13,7 +13,7 @@ import os
 import sys
 import sqlite3
 
-#Import External Librari
+#Import External Libraries
 import pandas as pd
 import pyarrow as pa
 import datetime
