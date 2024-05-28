@@ -1,10 +1,15 @@
-#Initialize Script
+#Create a new SQLite database file in the current project directory
 import sqlite3
 import pandas as pd
 import pathlib
 
 ## Define the database file in the current root project directory
+#Check for db and delete if it exists
+
+
 db_file = pathlib.Path("project.sqlite3")
+if db_file.exists():
+    db_file.unlink()
 
 def create_database():
     """Function to create a database. Connecting for the first time
