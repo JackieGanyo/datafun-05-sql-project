@@ -28,33 +28,6 @@ logging.info("Program started")
 #Define the database file in the current root project directory
 db_file = "Module5.db"
 
-def create_database():
-    """Function to create a database. Connecting for the first time
-    will create a new database file if it doesn't exist yet.
-    Close the connection after creating the database
-    to avoid locking the file."""
-    try:
-        conn = sqlite3.connect(db_file)
-        conn.close()
-        print("Database created successfully.")
-    except sqlite3.Error as e:
-        print("Error creating the database:", e)
-
-#Function to create tables in the database.
-#Function to read and execute SQL statements to create tables
-def create_tables():
-
-    try:
-        with sqlite3.connect(db_file) as conn:
-            sql_file = pathlib.Path("sql", "project.sql")
-            with open(sql_file, "r") as file:
-                sql_script = file.read()
-            conn.executescript(sql_script)
-            print("Tables created successfully.")
-    except sqlite3.Error as e:
-        print("Error creating tables:", e)
-
-
 #Function to insert data into the tables from a CSV file.
 def insert_data_from_csv():
     """Function to use pandas to read data from CSV files (in 'data' folder)
@@ -72,12 +45,41 @@ def insert_data_from_csv():
             print("Data inserted successfully.")
     except (sqlite3.Error, pd.errors.EmptyDataError, FileNotFoundError) as e:
         print("Error inserting data:", e)
+        logging.error("Error inserting data:", e)
+        
+def create_database():
+    """Function to create a database. Connecting for the first time
+    will create a new database file if it doesn't exist yet.
+    Close the connection after creating the database
+    to avoid locking the file."""
+    try:
+        conn = sqlite3.connect(db_file)
+        conn.close()
+        print("Module5.db created successfully.")
+    except sqlite3.Error as e:
+        print("Error creating the database:", e)
+        logging.error("Error creating the database:", e)    
+        
+#Function to read and execute SQL statements to create tables
+def create_tables():
+
+    try:
+        with sqlite3.connect(db_file) as conn:
+            sql_file = pathlib.Path("sql", "project.sql")
+            with open(sql_file, "r") as file:
+                sql_script = file.read()
+            conn.executescript(sql_script)
+            print("Tables created successfully.")
+    except sqlite3.Error as e:
+        print("Error creating tables:", e)
+        logging.error("Error creating tables:", e)
+
 
 
 def main():
+    insert_data_from_csv()
     create_database()
     create_tables()
-    insert_data_from_csv()
     logging.info("Program ended")
     print("Program ended")
 if __name__ == "__main__":
