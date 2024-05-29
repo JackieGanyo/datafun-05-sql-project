@@ -10,7 +10,7 @@ the table. The program will then read the data from the table and display
 the data in a pandas DataFrame.
 '''
 # Import Standard Libraries
-import os
+
 import sys
 import sqlite3
 
@@ -73,22 +73,14 @@ def insert_data_from_csv():
             print("Data inserted successfully.")
     except (sqlite3.Error, pd.errors.EmptyDataError, FileNotFoundError) as e:
         print("Error inserting data:", e)
-        
-def execute_sql_from_file(db_file, project.sql):
-    with sqlite3.connect(db_file) as conn:
-        with open(sql_file, 'r') as file:
-            sql_script = file.read()
-        conn.executescript(sql_script)
-        print(f"Executed SQL from {sql_file}")
-        
+
 
 def main():
     create_database()
     create_tables()
     insert_data_from_csv()
-    execute_sql_from_file(db_file, 'insert_records.sql')
     logging.info("Program ended")
-    logging.info("All SQL operations completed successfully")
+    print("Program ended")
 if __name__ == "__main__":
     main()
 

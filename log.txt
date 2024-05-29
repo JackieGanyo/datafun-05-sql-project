@@ -1,2 +1,13 @@
 2024-05-28 23:21:15,005 - INFO - Program started
 2024-05-28 23:21:15,005 - INFO - Program ended
+2024-05-29 16:44:05,179 - INFO - Program started
+2024-05-29 16:44:51,715 - INFO - Program started
+2024-05-29 16:44:51,799 - INFO - Program ended
+2024-05-29 16:44:51,799 - INFO - All SQL operations completed successfully
+2024-05-29 17:12:27,142 - INFO - Program started
+2024-05-29 17:14:02,024 - INFO - Program started
+2024-05-29 17:14:02,111 - INFO - Program ended
+2024-05-29 17:17:20,566 - INFO - Program started
+2024-05-29 17:17:20,666 - INFO - Program ended
+2024-05-29 17:17:34,367 - INFO - Program started
+2024-05-29 17:17:34,461 - INFO - Program ended
