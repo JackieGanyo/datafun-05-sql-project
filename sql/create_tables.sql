@@ -14,6 +14,7 @@ CREATE TABLE authors (
     author_id TEXT PRIMARY KEY,
     first_name TEXT,
     last_name TEXT
+    year_born INTEGER
 );
 
 -- Create the books table

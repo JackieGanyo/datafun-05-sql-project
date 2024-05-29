@@ -28,7 +28,6 @@ logging.info("Program started")
 #Define the database file in the current root project directory
 db_file = "Module5.db"
 
-
 def create_database():
     """Function to create a database. Connecting for the first time
     will create a new database file if it doesn't exist yet.
