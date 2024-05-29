@@ -17,17 +17,26 @@ import sqlite3
 import pandas as pd
 import pyarrow as pa
 import datetime
-'''Logging Configuration for the project
-logging.basicConfig(
-    filename='log.txt',
-    level=logging.DEBUG, 
-    filemode='a',
-    format='%(asctime)s - %(levelname)s - %(message)s'
-    )
- # Example usage:
-logging.debug("This is a debug message.")
-logging.info("This is an info message.")
-logging.warning("This is a warning message.")
-logging.error("This is an error message.")
-logging.critical("This is a critical message.")
-'''
+
+#Logging Configuration for the project
+import logging
+
+# Configure logging to write to a file, appending new logs to the existing file
+logging.basicConfig(filename='log.txt', level=logging.DEBUG, filemode='a', format='%(asctime)s - %(levelname)s - %(message)s')
+
+
+
+
+
+
+def main():
+    logging.info("Program started")
+    # Your main code goes here
+    logging.info("Program ended")
+
+if __name__ == "__main__":
+    main()
+
+
+
+

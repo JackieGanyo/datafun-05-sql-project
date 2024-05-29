@@ -1,0 +1,2 @@
+2024-05-28 23:21:15,005 - INFO - Program started
+2024-05-28 23:21:15,005 - INFO - Program ended

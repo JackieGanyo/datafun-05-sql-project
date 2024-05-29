@@ -3,6 +3,7 @@ import sqlite3
 import pandas as pd
 import pathlib
 
+
 ## Define the database file in the current root project directory
 #Check for db and delete if it exists
 
