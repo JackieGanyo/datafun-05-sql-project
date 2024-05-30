@@ -22,7 +22,7 @@ logging.basicConfig(filename='log.txt', level=logging.DEBUG, filemode='a', forma
 logging.info("Program started")
 
 #Define the database file in the current root project directory
-db_file = "Module5.db"
+db_file = "Module5.db" 
 
 #Define create-database function
 def create_database():
@@ -79,30 +79,96 @@ def insert_records():
     except sqlite3.Error as e:
         print("Error inserting data:", e)
 
-def execute_sql_from_file(db_file, sql_file):
+def delete_records():
     with sqlite3.connect(db_file) as conn:
+        sql_file = pathlib.Path('sql', 'delete_records.sql')
         with open(sql_file, 'r') as file:
             sql_script = file.read()
         conn.executescript(sql_script)
         print(f"Executed SQL from {sql_file}")      
-      
+
+#Function to query database using AVG, COUNT, MAX, MIN      
+def query_aggregation():
+    try:
+        with sqlite3.connect(db_file) as conn:
+            sql_file = pathlib.Path('sql', 'query_aggregation.sql')
+            with open(sql_file, 'r') as file:
+                sql_script = file.read()
+            cursor= conn.executescript(sql_script)
+            result = cursor.fetchone()
+            print("Number of Books:", result[0],
+                  "Oldest Book:", result[1],
+                  "Newest Book:", result[2],
+                  "Average Year Published:", result[3])
+    except sqlite3.Error as e:
+        print("Error aggregate query data:", e)
+
+#Function to query database using 
+def query_filter():
+    try: 
+        with sqlite3.connect(db_file) as conn:
+            sql_file = pathlib.Path('sql', 'query_filter.sql')
+        with open(sql_file, 'r') as file:
+            sql_script = file.read()
+            cursor = conn.executescript(sql_script)
+            results = cursor.fetchall()
+        for row in results:
+            print(row)
+    except sqlite3.Error as e:
+        print("Error filter query data:", e)
+
+#Function to query database using ORDER BY
+def query_sorting():
+    try:
+        with sqlite3.connect(db_file) as conn:
+            sql_file = pathlib.Path('sql', 'query_sorting.sql')
+            with open(sql_file, 'r') as file:
+                sql_script = file.read()
+            cursor = conn.executescript(sql_script)
+            results = cursor.fetchall()
+        for row in results:
+            print(row)
+    except sqlite3.Error as e:
+        print("Error sorting query data:", e)
+
+#Function to query database using GROUP BY 
+def query_group_by():
+    try:
+        with sqlite3.connect(db_file) as conn:
+            sql_file = pathlib.Path('sql', 'query_group_by.sql')
+            with open(sql_file, 'r') as file:
+                sql_script = file.read()
+            cursor = conn.executescript(sql_script)
+            results = cursor.fetchall()
+        for row in results:
+            print(row)
+    except sqlite3.Error as e:
+        print("Error group by query data:", e)
+
+def query_join():
+    try:
+        with sqlite3.connect(db_file) as conn:
+            sql_file = pathlib.Path('sql', 'query_join.sql')
+            with open(sql_file, 'r') as file:
+                sql_script = file.read()
+            cursor = conn.executescript(sql_script)
+            results = cursor.fetchall()
+        for row in results:
+            print(row)
+    except sqlite3.Error as e:
+        print("Error join query data:", e)
+        
 def main():
     create_database()
     create_tables()
     insert_data_from_csv()
-    insert_records()
- 
-    db_file = 'Module5.db'
-    # Create database schema and populate with data
-    execute_sql_from_file(db_file, 'delete_records.sql')
-    execute_sql_from_file(db_file, 'query_aggregation.sql')
-    execute_sql_from_file(db_file, 'query_filter.sql')
-    execute_sql_from_file(db_file, 'query_sorting.sql')
-    execute_sql_from_file(db_file, 'query_group_by.sql')
-    execute_sql_from_file(db_file, 'query_join.sql')
-
-    logging.info("All SQL operations completed successfully")
-
-    print("Program ended")
+    insert_records() 
+    delete_records()
+    query_aggregation()
+    query_filter()
+    query_sorting()
+    query_group_by()
+    query_join()    
+    
 if __name__ == "__main__":
     main()
