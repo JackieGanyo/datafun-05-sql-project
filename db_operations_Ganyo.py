@@ -95,11 +95,9 @@ def query_aggregation():
             with open(sql_file, 'r') as file:
                 sql_script = file.read()
             cursor= conn.executescript(sql_script)
-            result = cursor.fetchone()
-            print("Number of Books:", result[0],
-                  "Oldest Book:", result[1],
-                  "Newest Book:", result[2],
-                  "Average Year Published:", result[3])
+            result = cursor.fetchall()
+            print(result)
+            
     except sqlite3.Error as e:
         print("Error aggregate query data:", e)
 
@@ -172,3 +170,4 @@ def main():
     
 if __name__ == "__main__":
     main()
+    logging.info("Program ended")
