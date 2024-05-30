@@ -1,5 +1,3 @@
---Use COUNT, AVG, SUM, etc with tables
-
 SELECT 
     COUNT(title) AS Number_of_books, 
     MIN(year_published) AS Oldest_Book, 

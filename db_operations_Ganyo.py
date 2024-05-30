@@ -90,15 +90,15 @@ def delete_records():
 #Function to query database using AVG, COUNT, MAX, MIN      
 def query_aggregation():
     try:
+        db_file = pathlib.Path("Module5.db")
         with sqlite3.connect(db_file) as conn:
-            sql_file = pathlib.Path('sql', 'query_aggregation.sql')
+            sql_file = pathlib.Path('query_aggregation.sql')
             with open(sql_file, 'r') as file:
                 sql_script = file.read()
             cursor= conn.executescript(sql_script)
             result = cursor.fetchall()
-            with open("AGG.txt", "w") as file:
-                for row in result:
-                    file.write(str(row) + "\n")
+            with open("Aggregate.txt", "w") as file:
+                file.write(str(result))                      
             print(f"Executed SQL from {sql_file}") 
     except sqlite3.Error as e:
         print("Error aggregate query data:", e)
