@@ -212,7 +212,6 @@ def query_sorting():
                 """, author)
             target_conn.commit()
             print(f"Sorted data has been inserted into {target_db_file}")
-    
     except sqlite3.Error as e:
         print("Error processing query and sorting data:", e)
 
