@@ -25,6 +25,7 @@ logging.info("Program started")
 #Define the database file in the current root project directory
 db_file = "Module5.db"
 
+#Define create-database function
 def create_database():
     """Function to create a database. Connecting for the first time
     will create a new database file if it doesn't exist yet.
@@ -43,7 +44,6 @@ def insert_data_from_csv():
     """Function to use pandas to read data from CSV files (in 'data' folder)
     and insert the records into their respective tables."""
     try:
-        db_file = "Module5.db"
         author_data_path = pathlib.Path("data", "authors.csv")
         book_data_path = pathlib.Path("data", "books.csv")
         authors_df = pd.read_csv(author_data_path)
@@ -55,13 +55,13 @@ def insert_data_from_csv():
             books_df.to_sql("books", conn, if_exists="replace", index=False)
             print("Data inserted successfully.")
     except (sqlite3.Error, pd.errors.EmptyDataError, FileNotFoundError) as e:
-        print("Error inserting data:", e)
-        logging.error("Error inserting data:", e)
+        print("Error inserting CSV data:", e)
+        logging.error("Error inserting CSV data:", e)
 
 #Function to insert data into the tables from an SQL file. 
 def insert_records(): 
     try:
-        db_file = "Module5.db"
+       
         with sqlite3.connect(db_file) as conn:
             sql_file = pathlib.Path("sql", "insert_records.sql")
             with open(sql_file, "r") as file:
@@ -74,7 +74,7 @@ def insert_records():
         
 def sort_data():
     try:
-        db_file = "Module5.db"
+      
         with sqlite3.connect(db_file) as conn:
             sql_file=pathlib.Path("sql", "sort.sql")
             with open(sql_file, "r") as file:
