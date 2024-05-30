@@ -9,12 +9,11 @@ the table. The program will then read the data from the table and display
 the data in a pandas DataFrame.
 '''
 # Import Libraries
-import sys
+import os
 import sqlite3
 import pathlib
 import pandas as pd
 import pyarrow as pa
-import datetime
 import logging
 
 #Logging Configuration for the project. Configure logging to write to a file, appending new logs to the existing file
@@ -79,6 +78,7 @@ def insert_records():
     except sqlite3.Error as e:
         print("Error inserting data:", e)
 
+#Function to delete Shakespeare records from the tables
 def delete_records():
     with sqlite3.connect(db_file) as conn:
         sql_file = pathlib.Path('sql', 'delete_records.sql')
@@ -96,8 +96,10 @@ def query_aggregation():
                 sql_script = file.read()
             cursor= conn.executescript(sql_script)
             result = cursor.fetchall()
-            print(result)
-            
+            with open("AGG.txt", "w") as file:
+                for row in result:
+                    file.write(str(row) + "\n")
+            print("Result written to AGG.txt")
     except sqlite3.Error as e:
         print("Error aggregate query data:", e)
 
@@ -106,12 +108,14 @@ def query_filter():
     try: 
         with sqlite3.connect(db_file) as conn:
             sql_file = pathlib.Path('sql', 'query_filter.sql')
-        with open(sql_file, 'r') as file:
-            sql_script = file.read()
-            cursor = conn.executescript(sql_script)
-            results = cursor.fetchall()
-        for row in results:
-            print(row)
+            with open(sql_file, 'r') as file:
+                sql_script = file.read()
+                cursor = conn.executescript(sql_script)
+                results = cursor.fetchall()
+            with open("Filter.txt", "w") as file:
+                for row in results:
+                    file.write(str(row) + "\n")
+            print("Result written to Filter.txt")
     except sqlite3.Error as e:
         print("Error filter query data:", e)
 
@@ -124,8 +128,10 @@ def query_sorting():
                 sql_script = file.read()
             cursor = conn.executescript(sql_script)
             results = cursor.fetchall()
-        for row in results:
-            print(row)
+            with open("SORT.txt", "w") as file:
+                for row in results:
+                    file.write(str(row) + "\n")
+            print("Result written to SORT.txt")
     except sqlite3.Error as e:
         print("Error sorting query data:", e)
 
@@ -138,11 +144,14 @@ def query_group_by():
                 sql_script = file.read()
             cursor = conn.executescript(sql_script)
             results = cursor.fetchall()
-        for row in results:
-            print(row)
+            with open("GROUP.txt", "w") as file:
+                for row in results:
+                    file.write(str(row) + "\n")
+            print("Result written to GROUP.txt")
     except sqlite3.Error as e:
         print("Error group by query data:", e)
 
+#Function to query database using JOIN
 def query_join():
     try:
         with sqlite3.connect(db_file) as conn:
@@ -151,8 +160,10 @@ def query_join():
                 sql_script = file.read()
             cursor = conn.executescript(sql_script)
             results = cursor.fetchall()
-        for row in results:
-            print(row)
+            with open("JOIN.txt", "w") as file:
+                for row in results:
+                    file.write(str(row) + "\n")
+            print("Result written to JOIN.txt")
     except sqlite3.Error as e:
         print("Error join query data:", e)
         
@@ -170,4 +181,5 @@ def main():
     
 if __name__ == "__main__":
     main()
-    logging.info("Program ended")
+    
+logging.info("Program ended")
