@@ -25,6 +25,7 @@ Use the recommended workflow - it's reliable and most likely to work with the fe
 SQLite is a self-contained, serverless, and zero-configuration SQL database engine that doesn't require any external Database Management System (DBMS) like SQL Server or Oracle to operate. Each database is a self-contained file. SQLite is widely used in embedded systems, mobile applications, and for lightweight database needs. We use the sqlite3 library to interact with SQLite databases using Python. 
 
 Creating a database is a common task, so let's create a function to create the database. We'll need one input - the Path to the database file we want to create. 
+![Mod 5 Create empty db file](https://github.com/JackieGanyo/datafun-05-sql-project/assets/162255714/dea61e30-d808-4de5-ba0f-c983183d04b6)
 
 #### 2. Tables: Create
 Now, let's create some tables for the database. We do this with SQL CREATE TABLE statements. While setting things up, we typically re-run our Python code multiple times, so add some code to DROP TABLE IF EXISTS before creating (or recreating) the tables.
@@ -80,12 +81,14 @@ To avoid duplicate records, use SELECT DISTINCT.
 Master sorting query results with ORDER BY. Practice organizing information by different criteria, like sorting movies by release year or by ratings. 
 -- Sort movies by release year in ascending order
 SELECT * FROM movies ORDER BY release_year;
+![Filter results](https://github.com/JackieGanyo/datafun-05-sql-project/assets/162255714/d95cd1ab-d63b-4478-a2aa-37ec8e9d8faf)
 
 -- Sort movies by title in descending order
 SELECT * FROM movies ORDER BY title DESC;
 
 #### 7. Records: INNER JOIN
 Explore how to use INNER JOIN to combine data from multiple tables. 
+![JOIN results](https://github.com/JackieGanyo/datafun-05-sql-project/assets/162255714/04e56842-e308-4b5e-9038-713cbd9d58bb)
 
 -- Example of an Inner join between authors and books tables
 SELECT authors.first_name, authors.last_name, books.title, books.year_published
@@ -108,8 +111,6 @@ WHERE title = 'Pulp Fiction';
 #### 9. Records: DELETE FROM
 Understand how to delete records with DELETE FROM. Learn to remove specific records, like deleting movies that have been discontinued or have low ratings.
 
- 
-
 -- Delete movies by title
 DELETE FROM movies WHERE title IN ('Batman', 'Spiderman', 'Avatar');
 
@@ -122,8 +123,10 @@ DELETE FROM movies WHERE rating < 5.0;
 #### 10. Records: COUNT, AVG, SUM, and GROUP BY 
 SQL Functions
 Like Python, SQL has built in functions, including COUNT(), AVG(), and SUM(). 
+![Aggregate Results](https://github.com/JackieGanyo/datafun-05-sql-project/assets/162255714/b9d0c13b-b52a-4819-91a8-5c009f686d27)
 
- 
+ ![Coding for Aggregate PY SQL](https://github.com/JackieGanyo/datafun-05-sql-project/assets/162255714/618b489a-98b9-43b5-9692-df055dfc89f4)
+
 
 -- count all rows
 SELECT COUNT(*) FROM sales;
@@ -138,6 +141,8 @@ SELECT SUM(amount), AVG(amount), COUNT(*) FROM sales;
  
 
 Grouping Data
+![AVG YR RESULTS](https://github.com/JackieGanyo/datafun-05-sql-project/assets/162255714/5273b54f-3c35-4ffa-a6c3-7563f936f0a2)
+![books by author results](https://github.com/JackieGanyo/datafun-05-sql-project/assets/162255714/f9b0649b-5edb-411c-b21a-aaa35af6b433)
 
 These functions become even more powerful when used with the GROUP BY clause for grouped data analysis. See your textbook for more information. 
 
