@@ -99,7 +99,7 @@ def query_aggregation():
             with open("AGG.txt", "w") as file:
                 for row in result:
                     file.write(str(row) + "\n")
-            print("Result written to AGG.txt")
+            print(f"Executed SQL from {sql_file}") 
     except sqlite3.Error as e:
         print("Error aggregate query data:", e)
 
@@ -115,7 +115,7 @@ def query_filter():
             with open("Filter.txt", "w") as file:
                 for row in results:
                     file.write(str(row) + "\n")
-            print("Result written to Filter.txt")
+            print(f"Executed SQL from {sql_file}") 
     except sqlite3.Error as e:
         print("Error filter query data:", e)
 
@@ -131,7 +131,7 @@ def query_sorting():
             with open("SORT.txt", "w") as file:
                 for row in results:
                     file.write(str(row) + "\n")
-            print("Result written to SORT.txt")
+            print(f"Executed SQL from {sql_file}") 
     except sqlite3.Error as e:
         print("Error sorting query data:", e)
 
@@ -147,7 +147,7 @@ def query_group_by():
             with open("GROUP.txt", "w") as file:
                 for row in results:
                     file.write(str(row) + "\n")
-            print("Result written to GROUP.txt")
+            print(f"Executed SQL from {sql_file}") 
     except sqlite3.Error as e:
         print("Error group by query data:", e)
 
@@ -163,7 +163,7 @@ def query_join():
             with open("JOIN.txt", "w") as file:
                 for row in results:
                     file.write(str(row) + "\n")
-            print("Result written to JOIN.txt")
+            print(f"Executed SQL from {sql_file}") 
     except sqlite3.Error as e:
         print("Error join query data:", e)
         
