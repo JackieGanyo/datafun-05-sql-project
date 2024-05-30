@@ -1,1 +1,16 @@
-[]
+Total Number of Books
+Number_of_books
+19
+
+Oldest Published Book
+Oldest_Book
+1813
+
+Newest Published Book
+Newest_Book
+1997
+
+Average Published Year
+Average_Year_Published
+1911.7894736842106
+

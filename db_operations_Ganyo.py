@@ -13,7 +13,7 @@ import os
 import sqlite3
 import pathlib
 import pandas as pd
-import pyarrow as pa
+import pyarrow 
 import logging
 
 #Logging Configuration for the project. Configure logging to write to a file, appending new logs to the existing file
@@ -91,17 +91,34 @@ def delete_records():
 def query_aggregation():
     try:
         db_file = pathlib.Path("Module5.db")
+        # Connect to the SQLite database
         with sqlite3.connect(db_file) as conn:
-            sql_file = pathlib.Path('query_aggregation.sql')
+            # Specify the SQL script file
+            sql_file = pathlib.Path('sql', 'query_aggregation.sql')
+            # Read the SQL script
             with open(sql_file, 'r') as file:
                 sql_script = file.read()
-            cursor= conn.executescript(sql_script)
-            result = cursor.fetchall()
+             # Execute the SQL script
+            cur = conn.executescript(sql_script)
+           # Queries to fetch the results (assuming these are the same queries as in the script)
+            queries = [
+                ("Total Number of Books", "SELECT COUNT(title) AS Number_of_books FROM books;"),
+                ("Oldest Published Book", "SELECT MIN(year_published) AS Oldest_Book FROM books;"),
+                ("Newest Published Book", "SELECT MAX(year_published) AS Newest_Book FROM books;"),
+                ("Average Published Year", "SELECT AVG(year_published) AS Average_Year_Published FROM books;")
+            ]
             with open("Aggregate.txt", "w") as file:
-                file.write(str(result))                      
-            print(f"Executed SQL from {sql_file}") 
+                for description, query in queries:
+                    cur.execute(query)
+                    result = cur.fetchone()
+                    if result:
+                        column_names = [desc[0] for desc in cur.description]
+                        file.write(f"{description}\n")
+                        file.write('\t'.join(column_names) + '\n')
+                        file.write('\t'.join(map(str, result)) + '\n\n')
+            print(f"Executed SQL from {sql_file}")
     except sqlite3.Error as e:
-        print("Error aggregate query data:", e)
+        print("Error aggregating query data:", e)
 
 #Function to query database using 
 def query_filter():
@@ -110,11 +127,26 @@ def query_filter():
             sql_file = pathlib.Path('sql', 'query_filter.sql')
             with open(sql_file, 'r') as file:
                 sql_script = file.read()
-                cursor = conn.executescript(sql_script)
-                results = cursor.fetchall()
+                cur = conn.executescript(sql_script)
+# Queries to fetch the results (assuming these are the same queries as in the script)
+            queries = [
+                ("Authors Last Name Beginning with ‘S%’", "SELECT * FROM authors WHERE (last) LIKE 'S%'"),
+                ("Books Published in the 1900s", "SELECT * FROM books WHERE (year_published) BETWEEN 1900 AND 1999;")
+                ]
             with open("Filter.txt", "w") as file:
-                for row in results:
-                    file.write(str(row) + "\n")
+                for description, query in queries:
+                    cur.execute(query)
+                    result = cur.fetchall()
+                    if result:
+                    # Write the description and column headers
+                        column_names = [desc[0] for desc in cur.description]
+                        file.write(f"{description}\n")
+                        file.write('\t'.join(column_names) + '\n')
+                        file.write('\t'.join(map(str, result)) + '\n\n')
+                    # Write all rows
+                        for row in result:
+                            file.write('\t'.join(map(str, row)) + '\n')
+                        file.write('\n')  # Separate results for readability
             print(f"Executed SQL from {sql_file}") 
     except sqlite3.Error as e:
         print("Error filter query data:", e)
@@ -122,18 +154,67 @@ def query_filter():
 #Function to query database using ORDER BY
 def query_sorting():
     try:
-        with sqlite3.connect(db_file) as conn:
-            sql_file = pathlib.Path('sql', 'query_sorting.sql')
+        # Specify the source database file
+        source_db_file = pathlib.Path("Module5.db")
+        # Specify the target database file
+        target_db_file = pathlib.Path("Sorted.db")
+        
+        # Connect to the source SQLite database
+        with sqlite3.connect(source_db_file) as source_conn:
+            # Read the SQL script
+            sql_file = pathlib.Path('sql', 'query_aggregation.sql')
             with open(sql_file, 'r') as file:
                 sql_script = file.read()
-            cursor = conn.executescript(sql_script)
-            results = cursor.fetchall()
-            with open("SORT.txt", "w") as file:
-                for row in results:
-                    file.write(str(row) + "\n")
-            print(f"Executed SQL from {sql_file}") 
+            
+            # Execute the SQL script in the source database
+            source_conn.executescript(sql_script)
+            
+            # Fetch sorted results from the source database
+            source_cursor = source_conn.cursor()
+            source_cursor.execute("SELECT * FROM books ORDER BY year_published ASC;")
+            sorted_books = source_cursor.fetchall()
+            books_columns = [description[0] for description in source_cursor.description]
+
+            source_cursor.execute("SELECT * FROM authors ORDER BY last ASC;")
+            sorted_authors = source_cursor.fetchall()
+            authors_columns = [description[0] for description in source_cursor.description]
+        
+        # Connect to the target SQLite database (create it if it doesn't exist)
+        with sqlite3.connect(target_db_file) as target_conn:
+            target_cursor = target_conn.cursor()
+            
+            # Create books table in the target database
+            target_cursor.execute(f"""
+                CREATE TABLE IF NOT EXISTS books (
+                    {", ".join([f"{col} TEXT" for col in books_columns])}
+                );
+            """)
+            
+            # Insert sorted books into the target database
+            for book in sorted_books:
+                target_cursor.execute(f"""
+                    INSERT INTO books ({", ".join(books_columns)}) 
+                    VALUES ({", ".join(['?' for _ in books_columns])});
+                """, book)
+            
+            # Create authors table in the target database
+            target_cursor.execute(f"""
+                CREATE TABLE IF NOT EXISTS authors (
+                    {", ".join([f"{col} TEXT" for col in authors_columns])}
+                );
+            """)
+            
+            # Insert sorted authors into the target database
+            for author in sorted_authors:
+                target_cursor.execute(f"""
+                    INSERT INTO authors ({", ".join(authors_columns)}) 
+                    VALUES ({", ".join(['?' for _ in authors_columns])});
+                """, author)
+            target_conn.commit()
+            print(f"Sorted data has been inserted into {target_db_file}")
+    
     except sqlite3.Error as e:
-        print("Error sorting query data:", e)
+        print("Error processing query and sorting data:", e)
 
 #Function to query database using GROUP BY 
 def query_group_by():
