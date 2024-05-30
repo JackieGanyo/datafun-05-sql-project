@@ -218,35 +218,131 @@ def query_sorting():
 #Function to query database using GROUP BY 
 def query_group_by():
     try:
-        with sqlite3.connect(db_file) as conn:
+        # Specify the source database file
+        source_db_file = pathlib.Path("Module5.db")
+        # Specify the target database file
+        target_db_file = pathlib.Path("Grouped.db")
+        
+        # Connect to the source SQLite database
+        with sqlite3.connect(source_db_file) as source_conn:
+            # Read the SQL script
             sql_file = pathlib.Path('sql', 'query_group_by.sql')
             with open(sql_file, 'r') as file:
                 sql_script = file.read()
-            cursor = conn.executescript(sql_script)
-            results = cursor.fetchall()
-            with open("GROUP.txt", "w") as file:
-                for row in results:
-                    file.write(str(row) + "\n")
-            print(f"Executed SQL from {sql_file}") 
+            
+            # Execute the SQL script in the source database
+            source_conn.executescript(sql_script)
+            
+            # Perform the GROUP BY queries and fetch results
+            group_queries = [
+                ("Books per Author",
+                """SELECT authors.first, authors.last, COUNT(books.book_id) AS book_count
+                FROM authors
+                JOIN books ON authors.author_id = books.author_id
+                GROUP BY  authors.first, authors.last;"""
+                ),
+                ("Average Year Published per Author",
+                """SELECT authors.first, authors.last, AVG(books.year_published) AS avg_year_published
+                FROM authors
+                JOIN books ON authors.author_id= books.author_id
+                GROUP BY authors.first, authors.last;""")
+                ]
+            
+            # Connect to the target SQLite database (create it if it doesn't exist)
+            with sqlite3.connect(target_db_file) as target_conn:
+                target_cursor = target_conn.cursor()
+                
+                # Create result tables in the target database
+                target_cursor.execute(
+                    """CREATE TABLE IF NOT EXISTS books_per_author(
+                    first_name TEXT,
+                    last_name TEXT,
+                    book_count INTEGER);"""
+                )
+                
+                target_cursor.execute(
+                    """CREATE TABLE IF NOT EXISTS avg_year_published_per_author
+                    (first_name TEXT,
+                    last_name TEXT,
+                    avg_year_published REAL);"""
+                )
+                
+                # Execute the group queries and insert results into the target database
+                for description, query in group_queries:
+                    source_cursor = source_conn.cursor()
+                    source_cursor.execute(query)
+                    results = source_cursor.fetchall()
+                    if results:
+                        # Determine the target table based on the description
+                        if "Books per Author" in description:
+                            target_table = "books_per_author"
+                        elif "Average Year Published per Author" in description:
+                            target_table = "avg_year_published_per_author"
+                        
+                        # Insert the results into the appropriate table
+                        for row in results:
+                            target_cursor.execute(f"""
+                                INSERT INTO {target_table} VALUES ({", ".join(['?' for _ in row])});
+                            """, row)
+                
+                target_conn.commit()
+                print(f"Grouped data has been inserted into {target_db_file}")
+    
     except sqlite3.Error as e:
-        print("Error group by query data:", e)
+        print("Error processing group query and storing data:", e)
 
 #Function to query database using JOIN
 def query_join():
     try:
-        with sqlite3.connect(db_file) as conn:
-            sql_file = pathlib.Path('sql', 'query_join.sql')
-            with open(sql_file, 'r') as file:
-                sql_script = file.read()
-            cursor = conn.executescript(sql_script)
+        # Specify the source database file
+        source_db_file = pathlib.Path("Module5.db")
+        # Specify the target database file
+        target_db_file = pathlib.Path("JOIN.db")
+
+        # Connect to the source SQLite database
+        with sqlite3.connect(source_db_file) as conn:
+            # Define the SQL query
+            query = """
+                SELECT authors.first, authors.last, books.title, books.year_published
+                FROM authors
+                JOIN books
+                ON authors.author_id = books.author_id;
+            """
+            
+            # Execute the SQL query
+            cursor = conn.cursor()
+            cursor.execute(query)
+            
+            # Fetch all results
             results = cursor.fetchall()
-            with open("JOIN.txt", "w") as file:
-                for row in results:
-                    file.write(str(row) + "\n")
-            print(f"Executed SQL from {sql_file}") 
+
+        # Connect to the target SQLite database
+        with sqlite3.connect(target_db_file) as target_conn:
+            # Create a new table in the target database to store the results
+            target_cursor = target_conn.cursor()
+            target_cursor.execute("""
+                CREATE TABLE IF NOT EXISTS authors_books (
+                    first_name TEXT,
+                    last_name TEXT,
+                    book_title TEXT,
+                    year_published INTEGER
+                );
+            """)
+            
+            # Insert the fetched results into the new table
+            target_cursor.executemany("""
+                INSERT INTO authors_books VALUES (?, ?, ?, ?);
+            """, results)
+
+            # Commit the changes
+            target_conn.commit()
+
+        print("Results have been stored in JOIN.db database.")
+
     except sqlite3.Error as e:
-        print("Error join query data:", e)
-        
+        print("Error querying authors and books:", e)
+
+            
 def main():
     create_database()
     create_tables()
