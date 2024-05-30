@@ -6,14 +6,13 @@
 DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS authors;
 
-
 -- Create the authors table 
 -- Note that the author table has no foreign keys, so it is a standalone table
 
 CREATE TABLE authors (
     author_id TEXT PRIMARY KEY,
     first_name TEXT,
-    last_name TEXT
+    last_name TEXT,
     year_born INTEGER
 );
 
