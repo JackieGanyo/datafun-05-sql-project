@@ -9,12 +9,9 @@ create a table in the database. The program will also insert data into
 the table. The program will then read the data from the table and display
 the data in a pandas DataFrame.
 '''
-# Import Standard Libraries
-
+# Import Libraries
 import sys
 import sqlite3
-
-#Import External Libraries
 import pathlib
 import pandas as pd
 import pyarrow as pa

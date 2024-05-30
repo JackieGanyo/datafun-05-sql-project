@@ -1,6 +1,6 @@
 
 --Insert year_born into original authors table
-INSERT INTO authors (author_id, first_name, last_name, year_born)
+INSERT INTO authors (author_id, first, last, year_born)
 VALUES 
 ('10f88232-1ae7-4d88-a6a2-dfcebb22a596', 'Harper', 'Lee', 1926), 
 ('c3a47e85-2a6b-4196-a7a8-8b55d8fc1f70', 'George', 'Orwell', 1903), 
@@ -14,7 +14,7 @@ VALUES
 ('6b693b96-394a-4a1d-a4e2-792a47d7a568', 'J.K.', 'Rowling', 1965);
 
 --insert at least 10 records into authors and books 
-INSERT INTO authors (author_id, first_name, last_name)
+INSERT INTO authors (author_id, first, last, year_born)
 VALUES
 ('10f88232-1ae7-4d88-a6a2-dfcebb22a597', 'William', 'Shakespeare', 1564),
 ('c3a47e85-2a6b-4196-a7a8-8b55d8fc1f10', 'Charles', 'Dickens', 1812),
