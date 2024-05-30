@@ -1,4 +1,3 @@
-
 '''
 Jackie Ganyo
 Module 5 - Database Operations in SQLite
@@ -37,7 +36,18 @@ def create_database():
         print("Module5.db created successfully.")
     except sqlite3.Error as e:
         print("Error creating the database:", e)
-        logging.error("Error creating the database:", e)
+
+def create_tables():
+    """Function to read and execute SQL statements to create tables"""
+    try:
+        with sqlite3.connect(db_file) as conn:
+            sql_file = pathlib.Path("sql", "create_tables.sql")
+            with open(sql_file, "r") as file:
+                sql_script = file.read()
+            conn.executescript(sql_script)
+            print("Tables created successfully.")
+    except sqlite3.Error as e:
+        print("Error creating tables:", e)
         
 #Function to insert data into the tables from a CSV file.
 def insert_data_from_csv():
@@ -56,12 +66,10 @@ def insert_data_from_csv():
             print("Data inserted successfully.")
     except (sqlite3.Error, pd.errors.EmptyDataError, FileNotFoundError) as e:
         print("Error inserting CSV data:", e)
-        logging.error("Error inserting CSV data:", e)
-
+        
 #Function to insert data into the tables from an SQL file. 
 def insert_records(): 
-    try:
-       
+    try:       
         with sqlite3.connect(db_file) as conn:
             sql_file = pathlib.Path("sql", "insert_records.sql")
             with open(sql_file, "r") as file:
@@ -70,30 +78,31 @@ def insert_records():
         print("Data inserted successfully.")
     except sqlite3.Error as e:
         print("Error inserting data:", e)
-        logging.error("Error inserting data:", e)
-        
-def sort_data():
-    try:
+
+def execute_sql_from_file(db_file, sql_file):
+    with sqlite3.connect(db_file) as conn:
+        with open(sql_file, 'r') as file:
+            sql_script = file.read()
+        conn.executescript(sql_script)
+        print(f"Executed SQL from {sql_file}")      
       
-        with sqlite3.connect(db_file) as conn:
-            sql_file=pathlib.Path("sql", "sort.sql")
-            with open(sql_file, "r") as file:
-                sql_script = file.read()
-            conn.executescript(sql_script)
-        print("Data sorted successfully.")  
-    except sqlite3.Error as e:
-        print("Error sorting data:", e)
-        logging.error("Error sorting data:", e)
-
-
-
 def main():
     create_database()
-    insert_data_from_csv
+    create_tables()
+    insert_data_from_csv()
     insert_records()
-    sort_data()
+ 
+    db_file = 'Module5.db'
+    # Create database schema and populate with data
+    execute_sql_from_file(db_file, 'delete_records.sql')
+    execute_sql_from_file(db_file, 'query_aggregation.sql')
+    execute_sql_from_file(db_file, 'query_filter.sql')
+    execute_sql_from_file(db_file, 'query_sorting.sql')
+    execute_sql_from_file(db_file, 'query_group_by.sql')
+    execute_sql_from_file(db_file, 'query_join.sql')
 
-    logging.info("Program ended")
+    logging.info("All SQL operations completed successfully")
+
     print("Program ended")
 if __name__ == "__main__":
     main()
