@@ -88,14 +88,14 @@ def sort_data():
         print("Error sorting data:", e)
         logging.error("Error sorting data:", e)
 
-def 
+
 
 def main():
     create_database()
-    insert_data_from_csv()
-    insert_into()
+    insert_data_from_csv
+    insert_records()
     sort_data()
-    
+
     logging.info("Program ended")
     print("Program ended")
 if __name__ == "__main__":
